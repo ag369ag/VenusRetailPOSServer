@@ -3785,7 +3785,7 @@ namespace VenusRetailPOSServer
                 return;
             }
            // string posConfigPath = $"posconfig{loggedInPOSID}";
-            string exePath = $@"posconfig{loggedInPOSID}.exe";
+            string exePath = $@"POSCONFIG{loggedInPOSID}\\posconfig.exe";
 
             // Create a new process
             Process process = new Process();
