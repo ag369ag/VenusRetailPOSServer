@@ -2637,9 +2637,9 @@ namespace VenusRetailPOSServer
 
             CloseDayStarted = true;
 
-            btn_close_shift.PerformClick();
+            //btn_close_shift.PerformClick();
 
-            btn_close_cdraw.PerformClick();
+            //btn_close_cdraw.PerformClick();
 
         }
 
@@ -2684,6 +2684,11 @@ namespace VenusRetailPOSServer
 
         private void btn_refund_report_Click(object sender, EventArgs e)
         {
+            if (activeCashier.bof != 1)
+            {
+                MessageBox.Show("User is not allowed to print Refund Report.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             RefundReportForm voidRefundDlg = new RefundReportForm();
             if (voidRefundDlg.ShowDialog() == DialogResult.OK)
             {
@@ -2694,7 +2699,7 @@ namespace VenusRetailPOSServer
                 //Console.WriteLine("Form1 [{0}]::[{1}]", startDate, endDate);
 
                 var result = api.GetVoidRefundData(startDate.ToString("yyyy-MM-dd HH:mm:ss"), endDate.ToString("yyyy-MM-dd HH:mm:ss"));
-                if (result.ToUpper() == "NO DATA AVAILABLE")
+                if (result.ToUpper() == "FALSE")
                 {
                     MessageBox.Show("No Data Available");
                 }
@@ -3705,6 +3710,11 @@ namespace VenusRetailPOSServer
 
         private void btn_generate_csv_Click(object sender, EventArgs e)
         {
+            if (activeCashier.bof != 1)
+            {
+                MessageBox.Show("User is not allowed to generate csv.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             var boff = new BOF(loggedInPOSID);
             boff.ShowDialog();
         }
@@ -3769,7 +3779,13 @@ namespace VenusRetailPOSServer
 
         private void btn_pos_config_Click(object sender, EventArgs e)
         {
-            string exePath = @"posconfig.exe";
+            if (activeCashier.bof != 1)
+            {
+                MessageBox.Show("User is not allowed to access POS config.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+           // string posConfigPath = $"posconfig{loggedInPOSID}";
+            string exePath = $@"posconfig{loggedInPOSID}.exe";
 
             // Create a new process
             Process process = new Process();
@@ -3791,6 +3807,12 @@ namespace VenusRetailPOSServer
             }
 
             enb.LogPOSEvent($"Cashier Open Config:{activeCashier.name}", 9, loggedInPOSID, activeCashier.name);
+        }
+
+        private void ReportsForm_load(object sender, EventArgs e)
+        {
+            string formNumber = this.Text + " - POS" + loggedInPOSID.ToString();
+            this.Text = formNumber;
         }
     }
 }

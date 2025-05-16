@@ -58,9 +58,9 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(122, 170);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(94, 12);
+            this.label2.Size = new System.Drawing.Size(109, 12);
             this.label2.TabIndex = 94;
-            this.label2.Text = "Venus Retail POS 2.0";
+            this.label2.Text = "Venus Retail POS Server";
             // 
             // lbl_notif
             // 
@@ -85,7 +85,7 @@
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Image = global::VenusRetailPOSServer.Properties.Resources.company_logo_modified;
             this.pictureBox1.Location = new System.Drawing.Point(110, 22);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(120, 120);
@@ -308,6 +308,7 @@
             this.Controls.Add(this.lbl_datetime);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.txt_preview);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Login";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login";
