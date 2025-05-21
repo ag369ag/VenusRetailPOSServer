@@ -38,6 +38,7 @@
             this.dt_to = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.selectAllCheckBox = new System.Windows.Forms.CheckBox();
             this.chk_mov = new System.Windows.Forms.CheckBox();
             this.chk_sp = new System.Windows.Forms.CheckBox();
             this.chk_naac = new System.Windows.Forms.CheckBox();
@@ -186,6 +187,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.selectAllCheckBox);
             this.panel1.Controls.Add(this.chk_mov);
             this.panel1.Controls.Add(this.chk_sp);
             this.panel1.Controls.Add(this.chk_naac);
@@ -198,77 +200,96 @@
             this.panel1.Size = new System.Drawing.Size(493, 297);
             this.panel1.TabIndex = 2;
             // 
+            // selectAllCheckBox
+            // 
+            this.selectAllCheckBox.AutoSize = true;
+            this.selectAllCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.selectAllCheckBox.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.selectAllCheckBox.Location = new System.Drawing.Point(27, 20);
+            this.selectAllCheckBox.Name = "selectAllCheckBox";
+            this.selectAllCheckBox.Size = new System.Drawing.Size(105, 29);
+            this.selectAllCheckBox.TabIndex = 6;
+            this.selectAllCheckBox.Text = "Select All";
+            this.selectAllCheckBox.UseVisualStyleBackColor = true;
+            this.selectAllCheckBox.CheckedChanged += new System.EventHandler(this.Select_All_Toggled);
+            // 
             // chk_mov
             // 
             this.chk_mov.AutoSize = true;
             this.chk_mov.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chk_mov.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chk_mov.Location = new System.Drawing.Point(28, 223);
+            this.chk_mov.Location = new System.Drawing.Point(27, 238);
             this.chk_mov.Name = "chk_mov";
             this.chk_mov.Size = new System.Drawing.Size(309, 29);
             this.chk_mov.TabIndex = 5;
             this.chk_mov.Text = "Medal of Valor Sales Book/Report";
             this.chk_mov.UseVisualStyleBackColor = true;
+            this.chk_mov.CheckedChanged += new System.EventHandler(this.chk_mov_CheckedChanged);
             // 
             // chk_sp
             // 
             this.chk_sp.AutoSize = true;
             this.chk_sp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chk_sp.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chk_sp.Location = new System.Drawing.Point(28, 188);
+            this.chk_sp.Location = new System.Drawing.Point(27, 203);
             this.chk_sp.Name = "chk_sp";
             this.chk_sp.Size = new System.Drawing.Size(281, 29);
             this.chk_sp.TabIndex = 4;
             this.chk_sp.Text = "Solo Parent Sales Book/Report";
             this.chk_sp.UseVisualStyleBackColor = true;
+            this.chk_sp.CheckedChanged += new System.EventHandler(this.chk_sp_CheckedChanged);
             // 
             // chk_naac
             // 
             this.chk_naac.AutoSize = true;
             this.chk_naac.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chk_naac.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chk_naac.Location = new System.Drawing.Point(28, 151);
+            this.chk_naac.Location = new System.Drawing.Point(27, 166);
             this.chk_naac.Name = "chk_naac";
             this.chk_naac.Size = new System.Drawing.Size(443, 29);
             this.chk_naac.TabIndex = 3;
             this.chk_naac.Text = "National Athletes and Coaches Sales Book/Report";
             this.chk_naac.UseVisualStyleBackColor = true;
+            this.chk_naac.CheckedChanged += new System.EventHandler(this.chk_naac_CheckedChanged);
             // 
             // chk_pwd
             // 
             this.chk_pwd.AutoSize = true;
             this.chk_pwd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chk_pwd.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chk_pwd.Location = new System.Drawing.Point(28, 114);
+            this.chk_pwd.Location = new System.Drawing.Point(27, 129);
             this.chk_pwd.Name = "chk_pwd";
             this.chk_pwd.Size = new System.Drawing.Size(373, 29);
             this.chk_pwd.TabIndex = 2;
             this.chk_pwd.Text = "Persons with Disability Sales Book/Report";
             this.chk_pwd.UseVisualStyleBackColor = true;
+            this.chk_pwd.CheckedChanged += new System.EventHandler(this.chk_pwd_CheckedChanged);
             // 
             // chk_senior
             // 
             this.chk_senior.AutoSize = true;
             this.chk_senior.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chk_senior.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chk_senior.Location = new System.Drawing.Point(28, 77);
+            this.chk_senior.Location = new System.Drawing.Point(27, 92);
             this.chk_senior.Name = "chk_senior";
             this.chk_senior.Size = new System.Drawing.Size(302, 29);
             this.chk_senior.TabIndex = 1;
             this.chk_senior.Text = "Senior Citizen Sales Book/Report";
             this.chk_senior.UseVisualStyleBackColor = true;
+            this.chk_senior.CheckedChanged += new System.EventHandler(this.chk_senior_CheckedChanged);
             // 
             // chk_birsummary
             // 
             this.chk_birsummary.AutoSize = true;
             this.chk_birsummary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.chk_birsummary.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chk_birsummary.Location = new System.Drawing.Point(28, 40);
+            this.chk_birsummary.Location = new System.Drawing.Point(27, 55);
             this.chk_birsummary.Name = "chk_birsummary";
             this.chk_birsummary.Size = new System.Drawing.Size(247, 29);
             this.chk_birsummary.TabIndex = 0;
             this.chk_birsummary.Text = "BIR Sales Summary Report";
             this.chk_birsummary.UseVisualStyleBackColor = true;
+            this.chk_birsummary.CheckedChanged += new System.EventHandler(this.chk_birsummary_CheckedChanged);
             // 
             // tableLayoutPanel4
             // 
@@ -331,6 +352,8 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "BOF";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "BOF";
             this.Load += new System.EventHandler(this.BOF_Load);
@@ -371,5 +394,6 @@
         private System.Windows.Forms.DateTimePicker dt_from;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel ts_label;
+        private System.Windows.Forms.CheckBox selectAllCheckBox;
     }
 }

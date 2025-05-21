@@ -289,6 +289,8 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.statusStrip1);
             this.Name = "EJournalConsolidator";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EJournalConsolidator";
             this.Load += new System.EventHandler(this.frm_main_Load);

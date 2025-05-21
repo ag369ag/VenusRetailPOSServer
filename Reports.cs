@@ -513,6 +513,10 @@ namespace VenusRetailPOSServer
         public int POSID { get; set; }
         public DateTime transDate { get; set; }
         public decimal saleTotal { get; set; }
+        public int BIR_Trans_Number { get; set; }
+        public int transaction_resetter { get; set; }
+        public int transaction_number_reference { get; set; }
+        public int transaction_resetter_reference { get; set; }
         public List<RefundItem> saleItems { get; set; }
     }
 

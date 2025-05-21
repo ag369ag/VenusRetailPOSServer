@@ -1479,6 +1479,10 @@ namespace VenusRetailPOSServer
             string strDate2 = nowDate.ToString("MM-dd-yyyy", dateFormat);
 
             string strPrintData = "";
+
+            string printZCounter = "";
+            
+            
             Headers(out string[] h1, out string[] h2, out string[] h3, out string[] h4, out string[] h5);
 
             foreach (string ln in h1)
@@ -1496,6 +1500,12 @@ namespace VenusRetailPOSServer
                 rl.Add(CenteredText("*** REPRINT ***"));
                 rl.Add(CenteredText("Reprint Date:" + strDate));
 
+            }
+
+            if (title == "SHIFT REPORT")
+            {
+                rl.Add("");
+                rl.Add(CenteredText($"POS #{loggedInPOSID}"));
             }
 
             rl.Add("");
@@ -1518,13 +1528,15 @@ namespace VenusRetailPOSServer
             //END Header----------------------------------
 
             DateTime ddt = DateTime.Parse(pd.Period_Create_TS);
+            string cdt = "";
 
             String cl = null;
 
             if (pd.Period_Close_DT != null)
             {
-                ddt = DateTime.Parse(pd.Period_Close_DT);
-                cl = ddt.ToString("MM/dd/yyyy hh:mm tt", dateFormat);
+               // ddt = DateTime.Parse(pd.Period_Close_DT);
+                cdt = DateTime.Parse(pd.Period_Close_DT).ToString("MM/dd/yyyy hh:mm tt", dateFormat);
+               // cl = ddt.ToString("MM/dd/yyyy hh:mm tt", dateFormat);
             }
 
 
@@ -1540,8 +1552,7 @@ namespace VenusRetailPOSServer
             rl.Add(MakePrintString(lineChars, "Open date:", ddt.ToString("MM/dd/yyyy hh:mm tt", dateFormat)));
 
 
-
-            rl.Add(MakePrintString(lineChars, "Close date:", cl));
+            rl.Add(MakePrintString(lineChars, "Close date:", cdt));
             rl.Add(dash);
             if (title == "DAY REPORT" && type == 1)
             {
@@ -1597,6 +1608,8 @@ namespace VenusRetailPOSServer
                         ZCounter = int.Parse(z.Z_Counter)
 
                     });
+
+                    printZCounter = z.Z_Counter;
                     foreach (var ib in eodDisc)
                     {
                         Console.WriteLine(ib.Discount_Value);
@@ -2389,8 +2402,11 @@ namespace VenusRetailPOSServer
 
             rl.Add("");
 
-            rl.Add(CenteredText("- Invoice Numbers -"));
-            rl.Add("");
+            if(title != "DAY REPORT")
+            {
+                rl.Add(CenteredText("- Invoice Numbers -"));
+                rl.Add("");
+            }
 
             if (appConfig["POS"]["UseResetter"] == "Y")
             {
@@ -2418,7 +2434,7 @@ namespace VenusRetailPOSServer
                     }
                 }
                 if (title == "DAY REPORT" && type == 1)
-                    rl.Add(MakePrintString(lineChars, "Z-Counter", "1"));
+                    rl.Add(MakePrintString(lineChars, "Z-Counter", printZCounter));
             }
             else
             {
@@ -2598,7 +2614,29 @@ namespace VenusRetailPOSServer
             }
         }
 
-       
+
+        public bool StartProcess(string path, string args)
+        {
+            try
+            {
+                ProcessStartInfo processInfo = new ProcessStartInfo();
+                processInfo.FileName = path;
+                processInfo.ErrorDialog = true;
+                processInfo.UseShellExecute = false;
+                processInfo.RedirectStandardOutput = true;
+                processInfo.RedirectStandardError = true;
+                processInfo.Arguments = args;
+                processInfo.WorkingDirectory = Path.GetDirectoryName(path);
+                Process proc = Process.Start(processInfo);
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + Environment.NewLine + path, "Unable To Start Program", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
 
         private void btn_close_day_Click(object sender, EventArgs e)
         {
@@ -2883,12 +2921,21 @@ namespace VenusRetailPOSServer
                 decimal refTotalPerCashier = 0;
                 foreach (RefundReport rf in refByCashier)
                 {
-                    strPrintData = rf.transDate.ToString("MM/dd/yyyy HH:mm") + " POS: " + rf.POSID + " #" + rf.cashierID;
+                    //strPrintData = rf.transDate.ToString("MM/dd/yyyy HH:mm") + " POS: " + rf.POSID + " #" + rf.cashierID;
+                    strPrintData = rf.transDate.ToString("MM/dd/yyyy HH:mm") + " POS: " + rf.POSID;
                     rl.Add(strPrintData);
                     foreach (RefundItem ri in rf.saleItems)
                     {
                         if (ri.Item_Type == 2 || ri.Item_Type == 14 || ri.Item_Type == 53)
                         {
+
+                            string refundORNum = $"Refund #:{rf.transaction_resetter.ToString().PadLeft(3, '0')}-{rf.BIR_Trans_Number.ToString().PadLeft(9, '0')}";
+                            strPrintData = MakePrintString(lineChars, refundORNum, "");
+                            rl.Add(strPrintData);
+                            string refundReferenceNum = $"Reference #:{rf.transaction_resetter_reference.ToString().PadLeft(3, '0')}-{rf.transaction_number_reference.ToString().PadLeft(9, '0')}";
+                            strPrintData = MakePrintString(lineChars, refundReferenceNum, "");
+                            rl.Add(strPrintData);
+
                             strPrintData = MakePrintString(lineChars, ri.Item_Description, ri.Value.ToString("c"));
                             rl.Add(strPrintData);
                             refTotalPerCashier += ri.Value;
@@ -2915,6 +2962,14 @@ namespace VenusRetailPOSServer
                 {
                     strPrintData = rf.transDate.ToString("HH:mm") + " POS: " + rf.POSID + " #" + rf.cashierID + " " + rf.cashierName;
                     rl.Add(strPrintData);
+
+                    string refundORNum = $"Refund #:{rf.transaction_resetter.ToString().PadLeft(3, '0')}-{rf.BIR_Trans_Number.ToString().PadLeft(9, '0')}";
+                    strPrintData = MakePrintString(lineChars, refundORNum, "");
+                    rl.Add(strPrintData);
+                    string refundReferenceNum = $"Refund #:{rf.transaction_resetter_reference.ToString().PadLeft(3, '0')}-{rf.transaction_number_reference.ToString().PadLeft(9, '0')}";
+                    strPrintData = MakePrintString(lineChars, refundReferenceNum, "");
+                    rl.Add(strPrintData);
+
                     foreach (RefundItem ri in rf.saleItems)
                     {
                         if (ri.Item_Type == 10 && ri.Value == 0)
@@ -3633,7 +3688,7 @@ namespace VenusRetailPOSServer
                 {
                     res = cdldlg.cashdrawData;
                     ProcessCashDraw(res, true);
-                    enb.LogPOSEvent($"Cashier Print Report:{activeCashier.name}", 10, loggedInPOSID, activeCashier.name);
+                    enb.LogPOSEvent($"Cashier Print Report:{activeCashier.name}, Print Cashdraw", 10, loggedInPOSID, activeCashier.name);
 
                 }
             }
@@ -3661,7 +3716,7 @@ namespace VenusRetailPOSServer
             {
                 var data = shiftdlg.periodData;
                 ProcessReports(data, "SHIFT REPORT", 1, true);
-                enb.LogPOSEvent($"Cashier Print Report:{activeCashier.name}", 10, loggedInPOSID, activeCashier.name);
+                enb.LogPOSEvent($"Cashier Print Report:{activeCashier.name}, Shift Report", 10, loggedInPOSID, activeCashier.name);
 
             }
         }
@@ -3682,7 +3737,7 @@ namespace VenusRetailPOSServer
             {
                 var data = shiftdlg.periodData;
                 ProcessReports(data, "DAY REPORT", 1, true);
-                enb.LogPOSEvent($"Cashier Print Report:{activeCashier.name}", 10, loggedInPOSID, activeCashier.name);
+                enb.LogPOSEvent($"Cashier Print Report:{activeCashier.name}, Day Report", 10, loggedInPOSID, activeCashier.name);
 
             }
         }
@@ -3703,7 +3758,7 @@ namespace VenusRetailPOSServer
             {
                 var data = shiftdlg.periodData;
                 ProcessReports(data, "MONTH REPORT", 1, true);
-                enb.LogPOSEvent($"Cashier Print Report:{activeCashier.name}", 10, loggedInPOSID, activeCashier.name);
+                enb.LogPOSEvent($"Cashier Print Report:{activeCashier.name}, Month Report", 10, loggedInPOSID, activeCashier.name);
 
             }
         }
@@ -3785,9 +3840,11 @@ namespace VenusRetailPOSServer
                 return;
             }
            // string posConfigPath = $"posconfig{loggedInPOSID}";
-            string exePath = $@"POSCONFIG{loggedInPOSID}\\posconfig.exe";
+            string exePath = $"POSCONFIG{loggedInPOSID}\\posconfig.exe";
 
-            // Create a new process
+            StartProcess(exePath, $"POSCONFIG{loggedInPOSID}");
+
+            /*// Create a new process
             Process process = new Process();
             process.StartInfo.FileName = exePath;
 
@@ -3804,7 +3861,7 @@ namespace VenusRetailPOSServer
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            }*/
 
             enb.LogPOSEvent($"Cashier Open Config:{activeCashier.name}", 9, loggedInPOSID, activeCashier.name);
         }

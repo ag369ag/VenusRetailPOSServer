@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>company_logo_modified.ico</ApplicationIcon>
+    <ApplicationIcon>venus_retail_pos__1__0sD_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -229,6 +229,7 @@
     <Content Include="company_logo_modified.ico" />
     <None Include="company_logo_modified.png" />
     <Content Include="dlls\Microsoft.PointOfService.dll" />
+    <Content Include="venus_retail_pos__1__0sD_icon.ico" />
     <Content Include="vpc.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

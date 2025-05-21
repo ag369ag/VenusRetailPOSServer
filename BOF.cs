@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -16,10 +17,12 @@ namespace VenusRetailPOSServer
         public string CashierName { private get; set; }
         public DateTime GT_OpenDate { get; set; }
         EnbDB enb;
+        private int posNumber = 0;
         public BOF(int posID)
         {
             InitializeComponent();
             enb = new EnbDB(posID);
+            posNumber = posID;
         }
 
         private void BOF_Load(object sender, EventArgs e)
@@ -82,27 +85,27 @@ namespace VenusRetailPOSServer
                     break;
                 case 2:
                     {
-                        lines.Add("Senior Citizen Sales Book/Report");
+                        lines.Add("Senior Citizen Report");
                     }
                     break;
                 case 3:
                     {
-                        lines.Add("Person with Disability Sales Book/Report");
+                        lines.Add("Person with Disability Report");
                     }
                     break;
                 case 4:
                     {
-                        lines.Add("National Athletes and Coaches Sales Book/Report");
+                        lines.Add("National Athletes and Coaches Report");
                     }
                     break;
                 case 5:
                     {
-                        lines.Add("Solo Parent Sales Book/Report");
+                        lines.Add("Solo Parent Report");
                     }
                     break;
                 case 6:
                     {
-                        lines.Add("Medal of Valor Sales Book/Report");
+                        lines.Add("Medal of Valor Report");
                     }
                     break;
                 default:
@@ -175,35 +178,35 @@ namespace VenusRetailPOSServer
                 //csvh = "Date,Beginning SI/OR No.,Ending SI/OR No.,Grand Accum. Sales Ending Balance, Grand Accum. Beg. Balance, Sales Issued w/ Manual SI/OR,Gross Sales for the Day, VATable Sales, VAT Amount,VAT-Exempt Sales,Zero-Rated Sales,Deductions Discount SC,Deductions Discount PWD,Deductionss Discount NAAC,Deductions Solo Parent, Deductions MoV, Deductions Discount Others,Deductions Return,Deductions Voids,Deductions Total Deductions,Adjustment Discount SC,Adjustment Discount SC,Adjustment Discount PWD,Adjustment Discount Others, Adjustment VAT on Returns,Adjustment Others,Adjustment Total VAT Adjustment,VAT Payable,Net Sales,Sales Overrun/Overflow,Total Income,Reset Counter,Z-Counter,Remarks";
                 csvh = "Date,Beginning SI/OR No.,Ending SI/OR No.,Grand Accum. Sales Ending Balance, Grand Accum. Beg. Balance, Sales Issued w/ Manual SI/OR,Gross Sales for the Day, VATable Sales, VAT Amount,VAT-Exempt Sales,Zero-Rated Sales,Deductions Discount SC,Deductions Discount PWD,Deductionss Discount NAAC,Deductions Solo Parent, Deductions MoV, Deductions Discount Others,Deductions Return,Deductions Voids,Deductions Total Deductions,Adjustment Discount SC,Adjustment Discount PWD,Adjustment Discount Others, Adjustment VAT on Returns,Adjustment Others,Adjustment Total VAT Adjustment,VAT Payable,Net Sales,Sales Overrun/Overflow,Total Income,Reset Counter,Z-Counter,Remarks";
                 var data = GenerateBIRSalesReport(head, csvh, 1);
-                string fname = $"BIR_SALES_SUMMARY_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
+                string fname = $"POS#{posNumber} - BIR_SALES_SUMMARY_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
                 ProcessExport(fname, data);
             }
             if (chk_senior.Checked)
             {
                 csvh = "Date,Name Of Senior Citizen (SC),OSCA ID No./SC ID No.,SC TIN,SI/OR Number,Sales (inclusive of VAT),VAT Amount,VAT Exempt Sales,Discount 5%,Discount 20%,Net Sales";
                 var data = GenerateBIRSalesReport(head, csvh, 2);
-                string fname = $"SENIOR_CITIZEN_SALES_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
+                string fname = $"POS#{posNumber} - SENIOR_CITIZEN_SALES_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
                 ProcessExport(fname, data);
             }
             if (chk_pwd.Checked)
             {
                 csvh = "Date,Name Of Person with Disability (PWD),PWD ID No.,PWD TIN,SI/OR Number,Sales (inclusive of VAT),VAT Amount,VAT Exempt Sales,Discount 5%,Discount 20%,Net Sales";
                 var data = GenerateBIRSalesReport(head, csvh, 3);
-                string fname = $"PERSON_WITH_DISABILTY_SALES_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
+                string fname = $"POS#{posNumber} - PERSON_WITH_DISABILTY_SALES_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
                 ProcessExport(fname, data);
             }
             if (chk_naac.Checked)
             {
                 csvh = "Date,Name of National Athlete/Coach,PNSTM ID No., SI/OR Number,Gross Sales/Receipts,Sales Discount,Net Sales";
                 var data = GenerateBIRSalesReport(head, csvh, 4);
-                string fname = $"NATIONAL_ATHLETE_AND_COACH_SALES_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
+                string fname = $"POS#{posNumber} - NATIONAL_ATHLETE_AND_COACH_SALES_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
                 ProcessExport(fname, data);
             }
             if (chk_sp.Checked)
             {
                 csvh = "Date,Name of Solo Parent, SPIC No.,Name of child,Birth Date of child, Age of child, SI/OR Number,Gross Sales,Discount,Net Sales";
                 var data = GenerateBIRSalesReport(head, csvh, 5);
-                string fname = $"SOLO_PARENT_SALES_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
+                string fname = $"POS#{posNumber} - SOLO_PARENT_SALES_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
                 ProcessExport(fname, data);
             }
 
@@ -211,7 +214,7 @@ namespace VenusRetailPOSServer
             {
                 csvh = "Date,Name Of Medal Holder,MoV ID No./MoV ID No.,MoV TIN,SI/OR Number,Sales (inclusive of VAT),VAT Amount,VAT Exempt Sales,Discount 5%,Discount 20%,Net Sales";
                 var data = GenerateBIRSalesReport(head, csvh, 6);
-                string fname = $"MEDAL_OF_VALOR_SALES_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
+                string fname = $"POS#{posNumber} - MEDAL_OF_VALOR_SALES_REPORT - {DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.csv";
                 ProcessExport(fname, data);
             }
         }
@@ -228,6 +231,109 @@ namespace VenusRetailPOSServer
                 ts_label.Text = $"\u274c Export failed for {filename}";
                 //setMessage("Export failed!", MessageType.Error);
             }
+        }
+
+        private void Select_All_Toggled(object sender, EventArgs e)
+        {
+            CheckBox selectAll = sender as CheckBox;
+            if (selectAll.Checked)
+            {
+                chk_mov.Checked = true;
+                chk_sp.Checked = true;
+                chk_naac.Checked = true;
+                chk_pwd.Checked = true;
+                chk_senior.Checked = true;
+                chk_birsummary.Checked = true;
+            }
+            else
+            {
+                if (SetSelectAllOn())
+                {
+                    chk_mov.Checked = false;
+                    chk_sp.Checked = false;
+                    chk_naac.Checked = false;
+                    chk_pwd.Checked = false;
+                    chk_senior.Checked = false;
+                    chk_birsummary.Checked = false;
+                }
+            }
+            /*else
+            {
+                chk_mov.Checked = false;
+                chk_sp.Checked = false;
+                chk_naac.Checked = false;
+                chk_pwd.Checked = false;
+                chk_senior.Checked = false;
+                chk_birsummary.Checked = false;
+            }*/
+        }
+
+        private void SetSelectAllOff(CheckBox cb)
+        {
+            if (!cb.Checked)
+            {
+                selectAllCheckBox.Checked = false;
+            }
+            else
+            {
+                SetSelectAllOn();
+            }
+        }
+
+        private bool SetSelectAllOn()
+        {
+            if(
+                chk_mov.Checked == true &&
+            chk_sp.Checked == true &&
+            chk_naac.Checked == true &&
+            chk_pwd.Checked == true &&
+            chk_senior.Checked == true &&
+            chk_birsummary.Checked == true)
+            {
+                selectAllCheckBox.Checked = true;
+                return true;
+            }
+            else
+            {
+                selectAllCheckBox.Checked = false;
+                return false;
+            }
+        }
+
+        private void chk_birsummary_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chckbx = sender as CheckBox;
+            SetSelectAllOff(chckbx);
+        }
+
+        private void chk_senior_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chckbx = sender as CheckBox;
+            SetSelectAllOff(chckbx);
+        }
+
+        private void chk_pwd_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chckbx = sender as CheckBox;
+            SetSelectAllOff(chckbx);
+        }
+
+        private void chk_naac_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chckbx = sender as CheckBox;
+            SetSelectAllOff(chckbx);
+        }
+
+        private void chk_sp_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chckbx = sender as CheckBox;
+            SetSelectAllOff(chckbx);
+        }
+
+        private void chk_mov_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chckbx = sender as CheckBox;
+            SetSelectAllOff(chckbx);
         }
     }
 }
