@@ -745,6 +745,7 @@ namespace VenusRetailPOSServer
             request.AddHeader("content-type", "application/x-www-form-urlencoded");
             request.AddParameter("dateFrom", startDate);
             request.AddParameter("dateTo", endDate);
+            request.AddParameter("posID", GLO_POSID);
 
             IRestResponse response = client.Execute(request);
             LogJSON(response.Content, "GetVoidRefundData()");

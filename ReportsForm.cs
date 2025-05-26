@@ -2916,25 +2916,35 @@ namespace VenusRetailPOSServer
                               where item.cashierID == id
                               select item.cashierName).First();
                 rl.Add(CenteredText("Cashier: " + id.ToString() + " " + csname));
-
+                rl.Add("");
                 var refByCashier = refunds.Where(r => r.cashierID == id);
                 decimal refTotalPerCashier = 0;
+                string lastRefundNumber = "";
                 foreach (RefundReport rf in refByCashier)
                 {
                     //strPrintData = rf.transDate.ToString("MM/dd/yyyy HH:mm") + " POS: " + rf.POSID + " #" + rf.cashierID;
                     strPrintData = rf.transDate.ToString("MM/dd/yyyy HH:mm") + " POS: " + rf.POSID;
                     rl.Add(strPrintData);
+
+                    string refundORNum = $"Refund #:{rf.transaction_resetter.ToString().PadLeft(3, '0')}-{rf.BIR_Trans_Number.ToString().PadLeft(9, '0')}";
+                    if (lastRefundNumber != refundORNum)
+                    {
+                        //rl.Add(" ");
+                        strPrintData = MakePrintString(lineChars, refundORNum, "");
+                        rl.Add(strPrintData);
+                        string refundReferenceNum = $"Reference #:{rf.transaction_resetter_reference.ToString().PadLeft(3, '0')}-{rf.transaction_number_reference.ToString().PadLeft(9, '0')}";
+                        strPrintData = MakePrintString(lineChars, refundReferenceNum, "");
+                        rl.Add(strPrintData);
+                        lastRefundNumber = refundORNum;
+                    }
+
                     foreach (RefundItem ri in rf.saleItems)
                     {
                         if (ri.Item_Type == 2 || ri.Item_Type == 14 || ri.Item_Type == 53)
                         {
 
-                            string refundORNum = $"Refund #:{rf.transaction_resetter.ToString().PadLeft(3, '0')}-{rf.BIR_Trans_Number.ToString().PadLeft(9, '0')}";
-                            strPrintData = MakePrintString(lineChars, refundORNum, "");
-                            rl.Add(strPrintData);
-                            string refundReferenceNum = $"Reference #:{rf.transaction_resetter_reference.ToString().PadLeft(3, '0')}-{rf.transaction_number_reference.ToString().PadLeft(9, '0')}";
-                            strPrintData = MakePrintString(lineChars, refundReferenceNum, "");
-                            rl.Add(strPrintData);
+                           
+                            
 
                             strPrintData = MakePrintString(lineChars, ri.Item_Description, ri.Value.ToString("c"));
                             rl.Add(strPrintData);
@@ -2956,7 +2966,10 @@ namespace VenusRetailPOSServer
             foreach (DateTime dt in refundDates)
             {
                 rl.Add(CenteredText(dt.ToString("MM/dd/yyyy")));
+                rl.Add("");
                 var refundsByDate = refunds.Where(r => r.transDate.Date == dt);
+
+                string lastRefundNumber = "";
 
                 foreach (RefundReport rf in refundsByDate)
                 {
@@ -2964,11 +2977,17 @@ namespace VenusRetailPOSServer
                     rl.Add(strPrintData);
 
                     string refundORNum = $"Refund #:{rf.transaction_resetter.ToString().PadLeft(3, '0')}-{rf.BIR_Trans_Number.ToString().PadLeft(9, '0')}";
-                    strPrintData = MakePrintString(lineChars, refundORNum, "");
-                    rl.Add(strPrintData);
-                    string refundReferenceNum = $"Refund #:{rf.transaction_resetter_reference.ToString().PadLeft(3, '0')}-{rf.transaction_number_reference.ToString().PadLeft(9, '0')}";
-                    strPrintData = MakePrintString(lineChars, refundReferenceNum, "");
-                    rl.Add(strPrintData);
+                    
+                    if(lastRefundNumber != refundORNum)
+                    {       
+                        //rl.Add(" ");
+                        strPrintData = MakePrintString(lineChars, refundORNum, "");
+                        rl.Add(strPrintData);
+                        string refundReferenceNum = $"Refund #:{rf.transaction_resetter_reference.ToString().PadLeft(3, '0')}-{rf.transaction_number_reference.ToString().PadLeft(9, '0')}";
+                        strPrintData = MakePrintString(lineChars, refundReferenceNum, "");
+                        rl.Add(strPrintData);
+                        lastRefundNumber = refundORNum;
+                    }
 
                     foreach (RefundItem ri in rf.saleItems)
                     {
