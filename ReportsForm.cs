@@ -2983,7 +2983,7 @@ namespace VenusRetailPOSServer
                         //rl.Add(" ");
                         strPrintData = MakePrintString(lineChars, refundORNum, "");
                         rl.Add(strPrintData);
-                        string refundReferenceNum = $"Refund #:{rf.transaction_resetter_reference.ToString().PadLeft(3, '0')}-{rf.transaction_number_reference.ToString().PadLeft(9, '0')}";
+                        string refundReferenceNum = $"Reference #:{rf.transaction_resetter_reference.ToString().PadLeft(3, '0')}-{rf.transaction_number_reference.ToString().PadLeft(9, '0')}";
                         strPrintData = MakePrintString(lineChars, refundReferenceNum, "");
                         rl.Add(strPrintData);
                         lastRefundNumber = refundORNum;
@@ -3029,7 +3029,7 @@ namespace VenusRetailPOSServer
             SaveToPrintLog(dataToPrintLog);
 
 
-            string path = "reports\\VoidAndRefund" + " " + open + " to " + close + ".txt";
+            string path = "reports\\Refund" + " " + open + " to " + close + ".txt";
             fileIO.CreateTextFile(path, rl);
             //PrintText(rl);
 
